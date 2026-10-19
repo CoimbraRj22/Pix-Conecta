@@ -1,0 +1,182 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101114">
+  <title>Pix | CONecta+</title>
+
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      padding: 20px 12px;
+      background: #101114;
+      color: #fff;
+      font-family: Arial, sans-serif;
+    }
+
+    main {
+      max-width: 430px;
+      margin: 35px auto;
+      padding: 28px 22px;
+      text-align: center;
+      background: #1b1c21;
+      border: 1px solid #34353e;
+      border-radius: 28px;
+    }
+
+    .brand {
+      font-size: 30px;
+      font-weight: bold;
+      color: #2684ff;
+    }
+
+    .brand span { color: #fff; }
+
+    .tagline {
+      margin: 12px 0 56px;
+      color: #aeb4c0;
+      font-size: 14px;
+    }
+
+    h1 {
+      font-size: 30px;
+      margin-bottom: 30px;
+    }
+
+    p {
+      color: #c4c8d1;
+      line-height: 1.6;
+      font-size: 17px;
+    }
+
+    #qrcode {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 190px;
+      margin: 28px auto;
+      padding: 18px;
+      background: #fff;
+      border-radius: 18px;
+    }
+
+    #qrcode img, #qrcode canvas {
+      max-width: 100%;
+      height: auto;
+    }
+
+    button {
+      width: 100%;
+      padding: 20px 10px;
+      border: 0;
+      border-radius: 15px;
+      background: #16834e;
+      color: white;
+      font-size: 17px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    button:disabled {
+      background: #555b60;
+      cursor: not-allowed;
+    }
+
+    #mensagem {
+      min-height: 24px;
+      font-size: 14px;
+    }
+
+    .note {
+      margin-top: 24px;
+      font-size: 14px;
+    }
+
+    footer {
+      margin-top: 38px;
+      color: #818795;
+      font-size: 14px;
+    }
+  </style>
+</head>
+
+<body>
+  <main>
+    <div class="brand">CON<span>ecta+</span></div>
+    <div class="tagline">
+      PAGAMENTO FÁCIL, CONEXÃO INTELIGENTE
+    </div>
+
+    <h1>Pague com Pix</h1>
+
+    <p>
+      Escaneie o QR Code com outro celular
+      ou copie o código Pix para pagar pelo
+      aplicativo do seu banco.
+    </p>
+
+    <div id="qrcode">
+      <p id="aviso">
+        QR Code será exibido após configurar o Pix.
+      </p>
+    </div>
+
+    <button id="copiar" disabled>
+      PIX AINDA NÃO CONFIGURADO
+    </button>
+
+    <p id="mensagem" role="status"></p>
+
+    <p class="note">
+      Confira o nome do recebedor e informe o
+      valor no seu banco antes de confirmar.
+    </p>
+
+    <footer>Uma solução CONecta+</footer>
+  </main>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+  <script>
+    // Substitua o texto abaixo pelo Pix Copia e Cola completo.
+    const PIX = "00020126330014br.gov.bcb.pix0111150978187095204000053039865802BR5923RODRIGO PEREIRA COIMBRA6005MACAE62580520SAN2026101923093288850300017br.gov.bcb.brcode01051.0.06304E8B0";
+
+    const botao = document.getElementById("copiar");
+    const mensagem = document.getElementById("mensagem");
+    const qr = document.getElementById("qrcode");
+    const placeholder = "COLE_SEU_PIX_COPIA_E_COLA_AQUI";
+
+    if (PIX && PIX !== placeholder) {
+      qr.innerHTML = "";
+
+      if (typeof QRCode !== "undefined") {
+        new QRCode(qr, {
+          text: PIX,
+          width: 250,
+          height: 250,
+          correctLevel: QRCode.CorrectLevel.M
+        });
+
+        botao.disabled = false;
+        botao.textContent = "COPIAR CÓDIGO PIX";
+      } else {
+        qr.textContent = "Não foi possível carregar o gerador do QR Code.";
+      }
+    }
+
+    botao.addEventListener("click", async () => {
+      try {
+        await navigator.clipboard.writeText(PIX);
+        mensagem.textContent = "Código Pix copiado! Abra seu banco para pagar.";
+      } catch (e) {
+        mensagem.textContent =
+          "Não foi possível copiar. Tente novamente no navegador.";
+      }
+    });
+  </script>
+</body>
+</html>
